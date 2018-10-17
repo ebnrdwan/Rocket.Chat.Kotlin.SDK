@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.withContext
  * @return A list containing all permission types and their associated roles.
  */
 suspend fun RocketChatClient.permissions(): List<Permission> = withContext(CommonPool) {
-    val url = requestUrl(restUrl, "permissions").build()
+    val url = requestUrl(restUrl, "permissions/list").build()
     val request = requestBuilderForAuthenticatedMethods(url).get().build()
 
     val type = Types.newParameterizedType(List::class.java, Permission::class.java)
