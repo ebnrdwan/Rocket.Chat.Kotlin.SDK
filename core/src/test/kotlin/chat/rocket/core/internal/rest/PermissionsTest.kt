@@ -50,7 +50,7 @@ class PermissionsTest {
     fun `permissions() should return a list of Permission objects`() {
         mockServer.expect()
                 .get()
-                .withPath("/api/v1/permissions")
+                .withPath("/api/v1/permissions/list")
                 .andReturn(200, PERMISSIONS_OK)
                 .once()
 
