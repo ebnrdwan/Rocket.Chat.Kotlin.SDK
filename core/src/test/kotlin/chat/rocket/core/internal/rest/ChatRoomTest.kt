@@ -1,5 +1,4 @@
 package chat.rocket.core.internal.rest
-
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.Token
@@ -8,6 +7,7 @@ import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
 import io.fabric8.mockwebserver.DefaultMockServer
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.Before
@@ -15,7 +15,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertTrue
 
 class ChatRoomTest {
     private lateinit var mockServer: DefaultMockServer
