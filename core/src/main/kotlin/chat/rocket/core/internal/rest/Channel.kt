@@ -3,9 +3,7 @@ package chat.rocket.core.internal.rest
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.RestResult
-import chat.rocket.core.internal.model.ChatRoomUserPayload
-import chat.rocket.core.internal.model.CreateDirectMessagePayload
-import chat.rocket.core.internal.model.CreateNewChannelPayload
+import chat.rocket.core.internal.model.*
 import chat.rocket.core.model.DirectMessage
 import chat.rocket.core.model.Room
 import com.squareup.moshi.Types
@@ -22,10 +20,10 @@ import okhttp3.RequestBody
  * @param readOnly Tells whether to keep the new chat room read only or not.
  */
 suspend fun RocketChatClient.createChannel(
-    roomType: RoomType,
-    name: String,
-    usersList: List<String>?,
-    readOnly: Boolean? = false
+        roomType: RoomType,
+        name: String,
+        usersList: List<String>?,
+        readOnly: Boolean? = false
 ): Room = withContext(Dispatchers.IO) {
     val payload = CreateNewChannelPayload(name, usersList, readOnly)
     val adapter = moshi.adapter(CreateNewChannelPayload::class.java)
@@ -47,20 +45,34 @@ suspend fun RocketChatClient.createChannel(
  * @return A DirectMessage object.
  */
 suspend fun RocketChatClient.createDirectMessage(username: String): DirectMessage =
-    withContext(Dispatchers.IO) {
-        val payload = CreateDirectMessagePayload(username = username)
-        val adapter = moshi.adapter(CreateDirectMessagePayload::class.java)
-        val payloadBody = adapter.toJson(payload)
+        withContext(Dispatchers.IO) {
+            val payload = CreateDirectMessagePayload(username = username)
+            val adapter = moshi.adapter(CreateDirectMessagePayload::class.java)
+            val payloadBody = adapter.toJson(payload)
 
-        val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+            val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
 
-        val url = requestUrl(restUrl, "im.create").build()
-        val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
+            val url = requestUrl(restUrl, "im.create").build()
+            val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
 
-        val type = Types.newParameterizedType(RestResult::class.java, DirectMessage::class.java)
+            val type = Types.newParameterizedType(RestResult::class.java, DirectMessage::class.java)
 
-        return@withContext handleRestCall<RestResult<DirectMessage>>(request, type).result()
-    }
+            return@withContext handleRestCall<RestResult<DirectMessage>>(request, type).result()
+        }
+
+
+suspend fun RocketChatClient.deleteChannel(name: String, roomId: String? = null): DeleteChannelResult = withContext(Dispatchers.IO) {
+    val payload = DeleteChannelPayload(channelName = name, channelId = roomId)
+    val adapter = moshi.adapter(DeleteChannelPayload::class.java)
+    val payloadBody = adapter.toJson(payload)
+    val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+
+    val url = requestUrl(restUrl, getRestApiMethodNameByRoomType(RoomType.Channel(), "delete")).build()
+    val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
+    val type = Types.newParameterizedType(RestResult::class.java, DeleteChannelResult::class.java)
+
+    return@withContext handleRestCall<DeleteChannelResult>(request, type)
+}
 
 /**
  * Add the owner of a chat room.
@@ -70,9 +82,9 @@ suspend fun RocketChatClient.createDirectMessage(username: String): DirectMessag
  * @param userId The user id.
  */
 suspend fun RocketChatClient.addOwner(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) {
     withContext(Dispatchers.IO) {
         val payload = ChatRoomUserPayload(roomId, userId)
@@ -96,9 +108,9 @@ suspend fun RocketChatClient.addOwner(
  * @param userId The user id.
  */
 suspend fun RocketChatClient.addLeader(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) {
     withContext(Dispatchers.IO) {
         val payload = ChatRoomUserPayload(roomId, userId)
@@ -122,9 +134,9 @@ suspend fun RocketChatClient.addLeader(
  * @param userId The user id.
  */
 suspend fun RocketChatClient.addModerator(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) {
     withContext(Dispatchers.IO) {
         val payload = ChatRoomUserPayload(roomId, userId)
@@ -148,9 +160,9 @@ suspend fun RocketChatClient.addModerator(
  * @param userId The user id.
  */
 suspend fun RocketChatClient.removeOwner(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) = withContext(Dispatchers.IO) {
     val payload = ChatRoomUserPayload(roomId, userId)
     val adapter = moshi.adapter(ChatRoomUserPayload::class.java)
@@ -172,9 +184,9 @@ suspend fun RocketChatClient.removeOwner(
  * @param userId The user id.
  */
 suspend fun RocketChatClient.removeLeader(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) = withContext(Dispatchers.IO) {
     val payload = ChatRoomUserPayload(roomId, userId)
     val adapter = moshi.adapter(ChatRoomUserPayload::class.java)
@@ -196,9 +208,9 @@ suspend fun RocketChatClient.removeLeader(
  * @param userId The user id.
  */
 suspend fun RocketChatClient.removeModerator(
-    roomId: String,
-    roomType: RoomType,
-    userId: String
+        roomId: String,
+        roomType: RoomType,
+        userId: String
 ) = withContext(Dispatchers.IO) {
     val payload = ChatRoomUserPayload(roomId, userId)
     val adapter = moshi.adapter(ChatRoomUserPayload::class.java)

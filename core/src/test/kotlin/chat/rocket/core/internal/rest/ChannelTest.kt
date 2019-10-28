@@ -111,6 +111,21 @@ class ChannelTest {
         }
     }
 
+
+    @Test
+    fun `deleteChannel() should successfully create new channel`() {
+        mockServer.expect()
+                .post()
+                .withPath("/api/v1/channels.delete")
+                .andReturn(200, DELETE_CHANNEL_SUCCESS)
+                .once()
+
+        runBlocking {
+            sut.deleteChannel(
+                    name = "duplicate"
+            )
+        }
+    }
     @Test
     fun `createDirectMessage() should return true and yield no exceptions`() {
         mockServer.expect()

@@ -38,7 +38,7 @@ data class ChatRoom(
     val archived: Boolean,
     val userMentions: Long?,
     val groupMentions: Long?,
-    val lastMessage: LastMessage?,
+    val lastMessage: Message?,
     val client: RocketChatClient,
     val broadcast: Boolean,
     @JvmField val muted: List<String>? = null

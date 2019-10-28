@@ -7,8 +7,9 @@ import chat.rocket.core.model.attachment.Attachment
 import com.squareup.moshi.Json
 import se.ansman.kotshi.JsonSerializable
 
+@Deprecated("dublicated class, use always Message.kt class for messages")
 @JsonSerializable
-data class LastMessage(
+data class LastMessage (
     @Json(name = "_id") override val id: String?, // The id of the last message
     @Json(name = "rid") override val roomId: String?, // The room id of the last message
     @Json(name = "msg") override val message: String? = "", // The content of the last message

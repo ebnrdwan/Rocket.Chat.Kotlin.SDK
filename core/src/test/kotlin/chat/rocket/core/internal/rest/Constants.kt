@@ -2,7 +2,7 @@ package chat.rocket.core.internal.rest
 
 const val SUCCESS = "{\"success\": true}"
 const val MUST_BE_LOGGED_ERROR = "{\"status\":\"error\",\"message\":\"You must be logged in to do this.\"}"
-
+const val DELETE_CHANNEL_SUCCESS = "{\"success\": \"true\"}"
 const val LOGIN_SUCCESS = "{\"status\": \"success\",\"data\": {\"authToken\": \"authToken\",\"userId\": \"userId\"}}"
 const val LOGIN_ERROR = "{\"status\": \"error\",\"message\": \"Unauthorized\"}"
 
